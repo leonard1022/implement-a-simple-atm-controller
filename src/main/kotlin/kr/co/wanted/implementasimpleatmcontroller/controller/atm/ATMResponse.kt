@@ -1,6 +1,6 @@
 package kr.co.wanted.implementasimpleatmcontroller.controller.atm
 
-data class CompleteATMResponse(
+data class ATMResponse(
     val success: Boolean,
     val message: String,
 
