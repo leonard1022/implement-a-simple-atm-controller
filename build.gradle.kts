@@ -6,7 +6,7 @@ plugins {
 	kotlin("plugin.jpa") version "1.9.25"
 }
 
-group = "kr.co.wanted"
+group = "com.bear"
 version = "0.0.1-SNAPSHOT"
 description = "implement-a-simple-atm-controller"
 
