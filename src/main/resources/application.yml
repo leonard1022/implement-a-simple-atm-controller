@@ -2,6 +2,10 @@ spring:
   application:
     name: atm-controller
 
+  mvc:
+    problemdetails:
+      enabled: true
+
   datasource:
     url: jdbc:h2:mem:atmdb
     driver-class-name: org.h2.Driver
@@ -28,3 +32,13 @@ logging:
     org.springframework.web: INFO
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql: TRACE
+
+atm:
+  limits:
+    transaction:
+      min-amount: 1
+      max-single-deposit: 200000
+      max-single-withdrawal: 100000
+    daily:
+      max-deposit: 500000
+      max-withdrawal: 200000
