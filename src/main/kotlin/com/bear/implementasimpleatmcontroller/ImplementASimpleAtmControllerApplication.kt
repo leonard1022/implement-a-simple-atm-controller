@@ -1,4 +1,4 @@
-package kr.co.wanted.implementasimpleatmcontroller
+package com.bear.implementasimpleatmcontroller
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
