@@ -1,4 +1,4 @@
-package kr.co.wanted.implementasimpleatmcontroller.service
+package kr.co.wanted.implementasimpleatmcontroller.service.bank
 
 import kr.co.wanted.implementasimpleatmcontroller.domain.Account
 import kr.co.wanted.implementasimpleatmcontroller.domain.Card
