@@ -1,8 +1,8 @@
 package kr.co.wanted.implementasimpleatmcontroller.controller
 
 import jakarta.validation.Valid
-import kr.co.wanted.implementasimpleatmcontroller.controller.atm.CompleteATMRequest
-import kr.co.wanted.implementasimpleatmcontroller.controller.atm.CompleteATMResponse
+import kr.co.wanted.implementasimpleatmcontroller.controller.atm.ATMRequest
+import kr.co.wanted.implementasimpleatmcontroller.controller.atm.ATMResponse
 import kr.co.wanted.implementasimpleatmcontroller.controller.atm.TransactionType
 import kr.co.wanted.implementasimpleatmcontroller.service.atm.ATMService
 import org.springframework.http.HttpStatus
@@ -20,8 +20,8 @@ class ATMController(
 
     @PostMapping("/transaction")
     fun performCompleteTransaction(
-        @Valid @RequestBody request: CompleteATMRequest
-    ): ResponseEntity<CompleteATMResponse> {
+        @Valid @RequestBody request: ATMRequest
+    ): ResponseEntity<ATMResponse> {
 
         var sessionId: String? = null
 
@@ -34,7 +34,7 @@ class ATMController(
             val pinResult = atmService.verifyPin(sessionId, request.pin)
             if (!pinResult.verified) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                    CompleteATMResponse(
+                    ATMResponse(
                         success = false,
                         message = if (pinResult.cardBlocked) "Card has been blocked"
                                  else "Invalid PIN. ${pinResult.remainingAttempts} attempts remaining",
@@ -52,7 +52,7 @@ class ATMController(
             if (targetAccount == null) {
                 atmService.endSession(sessionId)
                 return ResponseEntity.badRequest().body(
-                    CompleteATMResponse(
+                    ATMResponse(
                         success = false,
                         message = "Account ${request.accountNumber} not found. Available accounts: ${
                             availableAccounts.joinToString { it.accountNumber }
@@ -70,7 +70,7 @@ class ATMController(
             val response = when (request.transactionType) {
                 TransactionType.CHECK_BALANCE -> {
                     val balanceResult = atmService.checkBalance(sessionId)
-                    CompleteATMResponse(
+                    ATMResponse(
                         success = true,
                         message = "Balance inquiry successful",
                         transactionType = TransactionType.CHECK_BALANCE.name,
@@ -84,7 +84,7 @@ class ATMController(
                     if (request.amount == null || request.amount <= 0) {
                         atmService.endSession(sessionId)
                         return ResponseEntity.badRequest().body(
-                            CompleteATMResponse(
+                            ATMResponse(
                                 success = false,
                                 message = "Deposit amount is required and must be positive",
                                 transactionType = TransactionType.DEPOSIT.name,
@@ -95,7 +95,7 @@ class ATMController(
                     }
 
                     val depositResult = atmService.deposit(sessionId, request.amount)
-                    CompleteATMResponse(
+                    ATMResponse(
                         success = true,
                         message = "Deposit successful",
                         transactionType = TransactionType.DEPOSIT.name,
@@ -111,7 +111,7 @@ class ATMController(
                     if (request.amount == null || request.amount <= 0) {
                         atmService.endSession(sessionId)
                         return ResponseEntity.badRequest().body(
-                            CompleteATMResponse(
+                            ATMResponse(
                                 success = false,
                                 message = "Withdrawal amount is required and must be positive",
                                 transactionType = TransactionType.WITHDRAW.name,
@@ -122,7 +122,7 @@ class ATMController(
                     }
 
                     val withdrawResult = atmService.withdraw(sessionId, request.amount)
-                    CompleteATMResponse(
+                    ATMResponse(
                         success = true,
                         message = "Withdrawal successful. Please take your cash.",
                         transactionType = TransactionType.WITHDRAW.name,
@@ -147,7 +147,7 @@ class ATMController(
             }
 
             ResponseEntity.badRequest().body(
-                CompleteATMResponse(
+                ATMResponse(
                     success = false,
                     message = e.message ?: "Invalid request",
                     transactionType = request.transactionType.name,
@@ -162,7 +162,7 @@ class ATMController(
             }
 
             ResponseEntity.status(HttpStatus.CONFLICT).body(
-                CompleteATMResponse(
+                ATMResponse(
                     success = false,
                     message = e.message ?: "Invalid state",
                     transactionType = request.transactionType.name,
@@ -177,7 +177,7 @@ class ATMController(
             }
 
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                CompleteATMResponse(
+                ATMResponse(
                     success = false,
                     message = "Transaction failed: ${e.message}",
                     transactionType = request.transactionType.name,
@@ -189,7 +189,7 @@ class ATMController(
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleValidationExceptions(ex: MethodArgumentNotValidException): ResponseEntity<CompleteATMResponse> {
+    fun handleValidationExceptions(ex: MethodArgumentNotValidException): ResponseEntity<ATMResponse> {
         val errors = ex.bindingResult.allErrors
             .mapNotNull { error ->
                 when (error) {
@@ -200,7 +200,7 @@ class ATMController(
             .joinToString(", ")
 
         return ResponseEntity.badRequest().body(
-            CompleteATMResponse(
+            ATMResponse(
                 success = false,
                 message = "Validation failed: $errors",
                 transactionType = "UNKNOWN",

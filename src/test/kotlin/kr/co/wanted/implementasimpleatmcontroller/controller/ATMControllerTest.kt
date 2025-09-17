@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import kr.co.wanted.implementasimpleatmcontroller.domain.Account
 import kr.co.wanted.implementasimpleatmcontroller.domain.AccountType
 import kr.co.wanted.implementasimpleatmcontroller.domain.Card
-import kr.co.wanted.implementasimpleatmcontroller.controller.atm.CompleteATMRequest
+import kr.co.wanted.implementasimpleatmcontroller.controller.atm.ATMRequest
 import kr.co.wanted.implementasimpleatmcontroller.controller.atm.TransactionType
 import kr.co.wanted.implementasimpleatmcontroller.service.atm.ATMService
 import kr.co.wanted.implementasimpleatmcontroller.service.atm.model.*
@@ -39,7 +39,7 @@ class ATMControllerTest {
 
     @Test
     fun `complete balance check transaction in single call`() {
-        val request = CompleteATMRequest(
+        val request = ATMRequest(
             cardNumber = "1234567890123456",
             pin = "1234",
             accountNumber = "ACC001",
@@ -106,7 +106,7 @@ class ATMControllerTest {
 
     @Test
     fun `complete withdrawal transaction in single call`() {
-        val request = CompleteATMRequest(
+        val request = ATMRequest(
             cardNumber = "1234567890123456",
             pin = "1234",
             accountNumber = "ACC001",
@@ -177,7 +177,7 @@ class ATMControllerTest {
 
     @Test
     fun `complete deposit transaction in single call`() {
-        val request = CompleteATMRequest(
+        val request = ATMRequest(
             cardNumber = "1234567890123456",
             pin = "1234",
             accountNumber = "ACC002",
@@ -243,7 +243,7 @@ class ATMControllerTest {
 
     @Test
     fun `fail transaction with incorrect PIN`() {
-        val request = CompleteATMRequest(
+        val request = ATMRequest(
             cardNumber = "1234567890123456",
             pin = "9999",
             accountNumber = "ACC001",
@@ -281,7 +281,7 @@ class ATMControllerTest {
 
     @Test
     fun `fail transaction when card is blocked`() {
-        val request = CompleteATMRequest(
+        val request = ATMRequest(
             cardNumber = "1234567890123456",
             pin = "9999",
             accountNumber = "ACC001",
@@ -314,7 +314,7 @@ class ATMControllerTest {
 
     @Test
     fun `fail transaction when account not found`() {
-        val request = CompleteATMRequest(
+        val request = ATMRequest(
             cardNumber = "1234567890123456",
             pin = "1234",
             accountNumber = "WRONG_ACCOUNT",
@@ -358,7 +358,7 @@ class ATMControllerTest {
 
     @Test
     fun `fail withdrawal without amount`() {
-        val request = CompleteATMRequest(
+        val request = ATMRequest(
             cardNumber = "1234567890123456",
             pin = "1234",
             accountNumber = "ACC001",
@@ -414,7 +414,7 @@ class ATMControllerTest {
 
     @Test
     fun `cleanup session when exception occurs`() {
-        val request = CompleteATMRequest(
+        val request = ATMRequest(
             cardNumber = "1234567890123456",
             pin = "1234",
             accountNumber = "ACC001",
